@@ -1,5 +1,6 @@
 let myLibrary = [];
 
+// Book constructor function
 function Book(title, author, pages, read) {
     this.title = title;
     this.author = author;
@@ -7,11 +8,28 @@ function Book(title, author, pages, read) {
     this.read = read;
 }
 
+// Function to add a book to the library and update local storage
 function addBookToLibrary(book) {
     myLibrary.push(book);
+    saveLibrary();
     displayBooks();
 }
 
+// Function to save the library array to local storage
+function saveLibrary() {
+    localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
+}
+
+// Function to load the library array from local storage
+function loadLibrary() {
+    const storedLibrary = JSON.parse(localStorage.getItem('myLibrary'));
+    if (storedLibrary) {
+        myLibrary = storedLibrary;
+    }
+    displayBooks();
+}
+
+// Function to display the books in the library on the webpage
 function displayBooks() {
     const library = document.getElementById('library');
     library.innerHTML = ''; // Clear previous content
@@ -29,11 +47,14 @@ function displayBooks() {
     });
 }
 
+// Function to remove a book from the library and update local storage
 function removeBook(index) {
     myLibrary.splice(index, 1);
+    saveLibrary();
     displayBooks();
 }
 
+// Event listener for the form submission
 document.getElementById('book-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const title = document.getElementById('title').value;
@@ -45,5 +66,6 @@ document.getElementById('book-form').addEventListener('submit', function(e) {
     this.reset();
 });
 
-displayBooks();
+// Load the library from local storage when the page loads
+document.addEventListener('DOMContentLoaded', loadLibrary);
 
